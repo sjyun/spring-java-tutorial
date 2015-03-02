@@ -18,6 +18,9 @@ apply plugin: 'idea'
 
 ext{
      javaVersion = '1.8'
+	 springVersion = '3.2.9.RELEASE'
+	logback =  '1.0.6'
+	slf4j =  '1.7.6'
  }
 
 sourceCompatibility = javaVersion
@@ -35,12 +38,25 @@ repositories {
    }
 }
 
+
+
+
 dependencies{
    providedCompile 'javax.servlet:javax.servlet-api:3.1.0'
-   compile 'org.springframework:spring-webmvc:3.2.9.RELEASE'
-   runtime 'javax.servlet:jstl:1.1.2'
+   compile "org.springframework:spring-webmvc:${springVersion}"
+   compile	"ch.qos.logback:logback-classic:${logback}"
+	compile "org.slf4j:slf4j-api:${slf4j}"
+
+	testCompile 'junit:junit:4.11'
+	testCompile "org.springframework:spring-test:${springVersion}"
+
+
+	runtime 'javax.servlet:jstl:1.1.2'
+
 
 }
+
+[configurations.runtime, configurations.default]*.exclude(module: 'commons-logging')
 
 jettyRunWar.contextPath = ''
 
@@ -97,6 +113,8 @@ task initProject << {
   idea{
 	module{
 		downloadSources = true
+		inheritOutputDirs = false
+		outputDir = file("${buildDir}/classes/main")
 	}
   }
 
